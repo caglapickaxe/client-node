@@ -12,7 +12,7 @@ const apiVerRegex = /^v[0-9]\//;
  * It can be passed into the client and used magically.
  */
 export class Service {
-    constructor(private client: Client) {}
+    constructor(private readonly client: Client) {}
 
     /**
      * Takes a response. If the status code isn't 200, attempt to find an
@@ -46,7 +46,8 @@ export class Service {
         let newPath = path;
         let apiVersion: string;
         if (apiVerRegex.test(path)) {
-            apiVersion = path.match(apiVerRegex)[0].slice(0, -1);
+            apiVersion = path.match(apiVerRegex)[0]
+                .slice(0, -1);
             newPath = path.slice(3);
         }
         const res = await this.client.request(method, newPath, data, apiVersion);

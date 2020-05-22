@@ -13,7 +13,7 @@
     "build:ts:module": "tsc --declaration",
     "build:ts:commonjs": "tsc --outDir dist/commonjs --module commonjs --target es6",
     "build": "yarn build:ts:module && yarn build:ts:commonjs",
-    "preinstall": "yarn build",
+    "postinstall": "yarn build",
     "lint": "tslint --project tsconfig.json \"src/**/*.ts\"",
     "lint:fix": "tslint --project tsconfig.json --fix \"src/**/*.ts\""
   },

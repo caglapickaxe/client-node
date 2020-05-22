@@ -27,7 +27,7 @@ const packageVersion = '0.13.0'; // package version
  */
 export class Client {
     private provider: Provider;
-    private userAgent: string;
+    private readonly userAgent: string;
     public urls: {
         api: { [version: string]: string };
         public: string;
@@ -48,7 +48,7 @@ export class Client {
      * The primary Mixer client, responsible for storing authentication state
      * and dispatching requests to the API.
      */
-    constructor(private requestRunner?: IRequestRunner) {
+    constructor(private readonly requestRunner?: IRequestRunner) {
         this.userAgent = this.buildUserAgent();
         if (!requestRunner) {
             this.requestRunner = new DefaultRequestRunner();
@@ -83,7 +83,7 @@ export class Client {
     /**
      * Builds a path to the Mixer API by concating it with the address.
      */
-    public buildAddress(base: string, path: string, querystr?: string | Object): string {
+    public buildAddress(base: string, path: string, querystr?: string | querystring.ParsedUrlQueryInput): string {
         let url = base;
 
         // Strip any trailing slash from the base
@@ -100,7 +100,7 @@ export class Client {
 
         // And just add the query string
         if (querystr) {
-            url += '?' + querystring.stringify(querystr);
+            url += '?' + (typeof querystr === 'string' ? querystr : querystring.stringify(querystr));
         }
 
         return url;
@@ -164,7 +164,7 @@ export class Client {
         options: ISocketOptions,
     ): Socket {
         return new Socket(ws, endpoints, {
-            clientId: this.provider instanceof OAuthProvider ? this.provider.getClientId() : null,
+            clientId: this.provider instanceof OAuthProvider ? this.provider.getClientId() : undefined,
             ...options,
         });
     }

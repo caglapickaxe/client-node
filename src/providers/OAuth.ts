@@ -39,7 +39,7 @@ export interface IQueryAttemptQueryString {
  * Provider for oauth-based authentication.
  */
 export class OAuthProvider extends Provider {
-    private details: {
+    private readonly details: {
         client_id: string;
         client_secret: string;
     };
