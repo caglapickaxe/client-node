@@ -9,11 +9,11 @@
   "scripts": {
     "test:unit": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"module\\\":\\\"commonjs\\\"} mocha --compilers ts:ts-node/register test/unit/**/*.test.js",
     "test:integrate": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"module\\\":\\\"commonjs\\\"} mocha --compilers ts:ts-node/register test/integration/**/*.test.js",
-    "test": "npm run test:unit && npm run lint",
+    "test": "yarn test:unit && yarn lint",
     "build:ts:module": "tsc --declaration",
     "build:ts:commonjs": "tsc --outDir dist/commonjs --module commonjs --target es6",
-    "build": "rimraf dist && npm run build:ts:module && npm run build:ts:commonjs",
-    "preinstall": "npm run build",
+    "build": "rimraf dist && yarn build:ts:module && yarn build:ts:commonjs",
+    "prepare": "yarn build",
     "lint": "tslint --project tsconfig.json \"src/**/*.ts\"",
     "lint:fix": "tslint --project tsconfig.json --fix \"src/**/*.ts\""
   },
