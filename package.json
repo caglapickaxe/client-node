@@ -12,8 +12,8 @@
     "test": "yarn test:unit && yarn lint",
     "build:ts:module": "tsc --declaration",
     "build:ts:commonjs": "tsc --outDir dist/commonjs --module commonjs --target es6",
-    "build": "rimraf dist && yarn build:ts:module && yarn build:ts:commonjs",
-    "prepare": "yarn build",
+    "build": "yarn build:ts:module && yarn build:ts:commonjs",
+    "preinstall": "yarn build",
     "lint": "tslint --project tsconfig.json \"src/**/*.ts\"",
     "lint:fix": "tslint --project tsconfig.json --fix \"src/**/*.ts\""
   },
@@ -46,7 +46,6 @@
     "chai-subset": "^1.3.0",
     "cross-env": "^5.2.1",
     "mocha": "^7.1.2",
-    "rimraf": "^2.7.1",
     "sinon": "^2.3.6",
     "sinon-chai": "^2.11.0",
     "ts-node": "^3.2.0",
