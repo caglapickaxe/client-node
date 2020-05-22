@@ -30,7 +30,7 @@ export class ChatService extends Service {
      */
     public getUsers(channelId: number, data: { page: number; limit: number }): Promise<IResponse<IUsersResponse[]>> {
         return this.makeHandled<IUsersResponse[]>('get', `v2/chats/${channelId}/users`, {
-            qs: data,
+            searchParams: data,
         });
     }
 
@@ -39,7 +39,7 @@ export class ChatService extends Service {
      */
     public searchUsers(channelId: number, data: { username: string; page: number; limit: number}): Promise<IResponse<IUsersResponse[]>> {
         return this.makeHandled('get', `v2/chats/${channelId}/users/search`, {
-            qs: data,
+            searchParams: data,
         });
     }
 }

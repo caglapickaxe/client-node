@@ -1,4 +1,5 @@
 import { UnknownCodeError } from '@mixer/chat-client-websocket';
+import { Method } from 'got';
 import { Client } from '../Client';
 import { IOptionalUrlRequestOptions, IResponse } from '../RequestRunner';
 
@@ -36,18 +37,19 @@ export class Service {
     /**
      * Simple wrapper that makes and handles a response in one go.
      */
-    protected makeHandled<T>(
-        method: string,
+    protected async makeHandled<T>(
+        method: Method,
         path: string,
         data?: IOptionalUrlRequestOptions,
         handlers?: { [key: string]: ICtor },
     ): Promise<IResponse<T>> {
+        let newPath = path;
         let apiVersion: string;
         if (apiVerRegex.test(path)) {
             apiVersion = path.match(apiVerRegex)[0].slice(0, -1);
-            path = path.slice(3);
+            newPath = path.slice(3);
         }
-        return this.client.request(method, path, data, apiVersion)
-        .then(res => this.handleResponse(res, handlers));
+        const res = await this.client.request(method, newPath, data, apiVersion);
+        return this.handleResponse(res, handlers);
     }
 }

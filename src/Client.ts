@@ -1,6 +1,7 @@
 // tslint:disable-next-line import-name no-require-imports
 import { IGenericWebSocket, ISocketOptions, Socket } from '@mixer/chat-client-websocket';
 import { all } from 'deepmerge';
+import { Method } from 'got';
 import * as querystring from 'querystring';
 
 import { OAuthProvider } from './providers/OAuth';
@@ -27,7 +28,10 @@ const packageVersion = '0.13.0'; // package version
 export class Client {
     private provider: Provider;
     private userAgent: string;
-    public urls: { api: { [version: string]: string }, public: string } = {
+    public urls: {
+        api: { [version: string]: string };
+        public: string;
+    } = {
         api: {
             v1: 'https://mixer.com/api/v1',
             v2: 'https://mixer.com/api/v2',
@@ -121,8 +125,8 @@ export class Client {
     /**
      * Attempts to run a given request.
      */
-    public request<T>(
-        method: string,
+    public async request<T>(
+        method: Method,
         path: string,
         data: IOptionalUrlRequestOptions = {},
         apiVer: string = 'v1',
@@ -134,22 +138,24 @@ export class Client {
         const req = all([
             this.provider ? this.provider.getRequest() : {},
             {
-                method: method || '',
+                method,
                 url: this.buildAddress(apiBase, path || ''),
                 headers: {
                     'User-Agent': this.userAgent,
                 },
-                json: true,
+                responseType: 'json',
             },
             data,
         ]);
 
-        return this.requestRunner.run(<IRequestOptions>req).catch(err => {
+        try {
+            return this.requestRunner.run(<IRequestOptions>req);
+        } catch (err) {
             if (this.provider) {
-                return this.provider.handleResponseError(err, <IRequestOptions>req);
+                return this.provider.handleResponseError(err, (<IRequestOptions>req));
             }
             throw err;
-        });
+        }
     }
 
     public createChatSocket(

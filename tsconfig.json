@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
@@ -38,5 +39,5 @@
         "genDir": "compiled",
         "skipMetadataEmit": false,
         "strictMetadataEmit": true
-    }
+    },
 }

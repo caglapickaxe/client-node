@@ -23,7 +23,7 @@ export class ClipsService extends Service {
      * 400-500: cannot clip
      */
     public async createClip(p: IClipRequest): Promise<IResponse<void>> {
-        return this.makeHandled<void>('post', `clips/create`, { body: p });
+        return this.makeHandled<void>('post', `clips/create`, { form: p });
     }
 
     /**
@@ -46,7 +46,7 @@ export class ClipsService extends Service {
      * Renames a clip.
      */
     public async renameClip(shareableId: string, newTitle: string): Promise<IResponse<IClipProperties>> {
-        return this.makeHandled<IClipProperties>('post', `clips/${shareableId}/metadata`, { body: { title: newTitle } });
+        return this.makeHandled<IClipProperties>('post', `clips/${shareableId}/metadata`, { form: { title: newTitle } });
     }
 
     /**

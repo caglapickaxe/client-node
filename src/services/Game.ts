@@ -40,7 +40,7 @@ export class GameService extends Service {
      */
     public updateGame(gameId: number, data: Partial<IGame>): Promise<IResponse<IGame>> {
         return this.makeHandled<IGame>('put', `interactive/games/${gameId}`, {
-            body: data,
+            form: data,
         });
     }
 
@@ -84,7 +84,7 @@ export class GameService extends Service {
      */
     public create(data: Pick<IGame, 'ownerId' | 'name' | 'description' | 'installation'>): Promise<IResponse<IGame>> {
         return this.makeHandled<IGame>('post', 'interactive/games', {
-            body: data,
+            form: data,
         });
     }
 
@@ -95,7 +95,7 @@ export class GameService extends Service {
         data: Pick<IVersion, 'gameId' | 'version' | 'changelog' | 'installation' | 'download' | 'controls'>,
     ): Promise<IResponse<IVersion>> {
         return this.makeHandled<IVersion>('post', 'interactive/versions', {
-            body: data,
+            form: data,
         });
     }
 
@@ -107,7 +107,7 @@ export class GameService extends Service {
         data: Pick<IVersion, 'version' | 'changelog' | 'installation' | 'download' | 'controls'>,
     ): Promise<IResponse<IVersion>> {
         return this.makeHandled<IVersion>('put', `interactive/versions/${versionId}`, {
-            body: data,
+            form: data,
         });
     }
 }

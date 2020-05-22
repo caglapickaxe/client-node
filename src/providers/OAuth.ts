@@ -143,7 +143,7 @@ export class OAuthProvider extends Provider {
      * Returns a promise which is rejected if there was an error
      * in obtaining authentication.
      */
-    public attempt(redirect: string, qs: IQueryAttemptQueryString): Promise<void> {
+    public async attempt(redirect: string, qs: IQueryAttemptQueryString): Promise<void> {
         if (qs.error) {
             return Promise.reject(
                 new AuthenticationFailedError(
@@ -162,7 +162,7 @@ export class OAuthProvider extends Provider {
             ); // silly devlopers
         }
 
-        return this.client
+        const res = await this.client
             .request<IOAuthTokenResponse>('post', '/oauth/token', {
                 form: {
                     grant_type: 'authorization_code',
@@ -170,14 +170,14 @@ export class OAuthProvider extends Provider {
                     redirect_uri: redirect,
                     ...this.details,
                 },
-            })
-            .then(res => this.unpackResponse(res));
+            });
+        return this.unpackResponse(res);
     }
 
     /**
      * Refreshes the authentication tokens, bumping the expires time.
      */
-    public refresh(): Promise<void> {
+    public async refresh(): Promise<void> {
         if (!this.tokens.refresh) {
             return Promise.reject(
                 new AuthenticationFailedError(
@@ -186,15 +186,15 @@ export class OAuthProvider extends Provider {
             );
         }
 
-        return this.client
+        const res = await this.client
             .request<IOAuthTokenResponse>('post', '/oauth/token', {
                 form: {
                     grant_type: 'refresh_token',
                     refresh_token: this.tokens.refresh,
                     ...this.details,
                 },
-            })
-            .then(res => this.unpackResponse(res));
+            });
+        return this.unpackResponse(res);
     }
 
     /**

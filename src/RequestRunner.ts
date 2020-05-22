@@ -1,32 +1,18 @@
-import * as request from 'request';
+import got, { CancelableRequest, Options, Response } from 'got';
 
-export interface IOptionalUrlRequestOptions extends request.CoreOptions {
-    url?: string;
-}
-
-export type IRequestOptions = request.CoreOptions & (request.UriOptions | request.UrlOptions);
+export type IOptionalUrlRequestOptions = Options;
+export type IRequestOptions = Options;
+export type IResponse<T> = Response<T>;
 
 export interface IRequestRunner {
-    run(options: IRequestOptions): Promise<request.RequestResponse>;
-}
-
-export interface IResponse<T> extends request.RequestResponse {
-    body: T;
+    run<T>(options: IRequestOptions): Promise<IResponse<T>>;
 }
 
 /**
  * Default request runner.
  */
 export class DefaultRequestRunner implements IRequestRunner {
-    public run <T>(options: IRequestOptions & (request.UriOptions | request.UrlOptions)): Promise<IResponse<T>> {
-        return new Promise((resolve, reject) => {
-            request(options, (error, response) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-                resolve(response);
-            });
-        });
+    public run<T>(options: IRequestOptions): Promise<IResponse<T>> {
+        return (<CancelableRequest>got(options)).json();
     }
 }

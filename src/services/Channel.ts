@@ -12,7 +12,7 @@ export class ChannelService extends Service {
      */
     public all(data: { page: number; limit: number }): Promise<IResponse<IChannel[]>> {
         return this.makeHandled<IChannel[]>('get', 'channels', {
-            qs: data,
+            searchParams: data,
         });
     }
 
