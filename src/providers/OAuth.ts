@@ -1,4 +1,5 @@
 import { AuthenticationFailedError } from '@mixer/chat-client-websocket';
+import { stringify } from 'querystring';
 import { Client } from '../Client';
 import { IOptionalUrlRequestOptions, IResponse } from '../RequestRunner';
 import { Provider } from './Provider';
@@ -71,7 +72,7 @@ export class OAuthProvider extends Provider {
             client_id: this.details.client_id,
         };
 
-        return this.client.buildAddress(this.client.urls.public, '/oauth/authorize', params);
+        return `${this.client.urls.public}/oauth-authorize/${stringify(params)}`;
     }
 
     /**
@@ -163,7 +164,7 @@ export class OAuthProvider extends Provider {
         }
 
         const res = await this.client
-            .request<IOAuthTokenResponse>('post', '/oauth/token', {
+            .request<IOAuthTokenResponse>('post', 'oauth/token', {
                 form: {
                     grant_type: 'authorization_code',
                     code: qs.code,
@@ -187,7 +188,7 @@ export class OAuthProvider extends Provider {
         }
 
         const res = await this.client
-            .request<IOAuthTokenResponse>('post', '/oauth/token', {
+            .request<IOAuthTokenResponse>('post', 'oauth/token', {
                 form: {
                     grant_type: 'refresh_token',
                     refresh_token: this.tokens.refresh,

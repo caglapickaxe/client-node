@@ -2,7 +2,6 @@
 import { IGenericWebSocket, ISocketOptions, Socket } from '@mixer/chat-client-websocket';
 import { all } from 'deepmerge';
 import { Method } from 'got';
-import * as querystring from 'querystring';
 
 import { OAuthProvider } from './providers/OAuth';
 import { Provider } from './providers/Provider';
@@ -81,32 +80,6 @@ export class Client {
     }
 
     /**
-     * Builds a path to the Mixer API by concating it with the address.
-     */
-    public buildAddress(base: string, path: string, querystr?: string | querystring.ParsedUrlQueryInput): string {
-        let url = base;
-
-        // Strip any trailing slash from the base
-        if (url.slice(-1) === '/') {
-            url = url.slice(0, -1);
-        }
-        let sanitizedPath = path;
-        // And any leading slash from the path.
-        if (sanitizedPath.charAt(0) === '/') {
-            sanitizedPath = sanitizedPath.slice(1);
-        }
-
-        url = url + '/' + sanitizedPath;
-
-        // And just add the query string
-        if (querystr) {
-            url += '?' + (typeof querystr === 'string' ? querystr : querystring.stringify(querystr));
-        }
-
-        return url;
-    }
-
-    /**
      * Creates and returns an authentication provider instance.
      */
     public use(provider: Provider): Provider {
@@ -139,7 +112,8 @@ export class Client {
             this.provider ? this.provider.getRequest() : {},
             {
                 method,
-                url: this.buildAddress(apiBase, path || ''),
+                prefixUrl: apiBase,
+                url: path || '',
                 headers: {
                     'User-Agent': this.userAgent,
                 },
